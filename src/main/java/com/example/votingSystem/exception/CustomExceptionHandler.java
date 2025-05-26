@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
-public class ValidationExceptionHandler {
+public class CustomExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {
@@ -23,6 +23,18 @@ public class ValidationExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse("VALIDATION_ERROR",defaultMessage, Status.FAILED);
 
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UnAuthorisedException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidCredential(UnAuthorisedException ex) {
+        ErrorResponse error = new ErrorResponse(ex.getErrorCode(), ex.getMessage(), Status.FAILED);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+    }
+
+    @ExceptionHandler(ElectionException.class)
+    public ResponseEntity<ErrorResponse> handleAdminElectionException(ElectionException ex) {
+        ErrorResponse error = new ErrorResponse(ex.getErrorCode(), ex.getMessage(), Status.FAILED);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 }
 

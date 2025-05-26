@@ -1,6 +1,7 @@
 package com.example.votingSystem.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,7 @@ public class CandidateDetails {
     private String name;
 
     @Column(name="mobile_Number")
+    @NotNull(message = "Mobile Number is required")
     private String mobileNumber;
 
     @Column(name = "election_name", length = 30)

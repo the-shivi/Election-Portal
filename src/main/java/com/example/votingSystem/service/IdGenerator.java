@@ -19,6 +19,9 @@ public class IdGenerator {
             case ELECTIONID:
                 prefix = "ES_";
                 break;
+            case AUTHENTICATIONID:
+                prefix = "AU_";
+                break;
             default:
                 prefix= "XX_";
         }

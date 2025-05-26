@@ -19,4 +19,5 @@ public class FetchElectionDataResponse {
     private Integer totalElections;
     private List<ElectionDetails> electionDetailsList;
     private LocalDateTime date;
+    private String serviceCode;
 }

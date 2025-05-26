@@ -1,9 +1,10 @@
 package com.example.votingSystem.service;
 
 import com.example.votingSystem.entity.ElectionDetails;
-import com.example.votingSystem.enums.IdType;
+import com.example.votingSystem.enums.ErrorCodes;
+import com.example.votingSystem.enums.ServiceCodes;
 import com.example.votingSystem.enums.Status;
-import com.example.votingSystem.exception.AdminElectionException;
+import com.example.votingSystem.exception.ElectionException;
 import com.example.votingSystem.model.FetchElectionDataResponse;
 import com.example.votingSystem.repository.ElectionDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class AdminVotingService {
     ElectionDetailsRepository electionDetailsRepository;
 
     @Autowired
-    Validator validator;
+    CustomValidator validator;
 
     @Autowired
     IdGenerator idGenerator;
@@ -42,7 +43,7 @@ public class AdminVotingService {
         }
 
         if (validator.isClosingDateValid(electionDetails.getStartingDate(),electionDetails.getClosingDate(),minElectionActiveDays)) {
-            throw new AdminElectionException("Active duration must be more than "+ minElectionActiveDays +" days");
+            throw new ElectionException(ErrorCodes.INVALID_DATE_RANGE, "Active duration must be more than "+ minElectionActiveDays +" days");
         }
         electionDetails.setCreatedOn(LocalDateTime.now());
         electionDetails.setEnrolledCandidate(0);
@@ -53,9 +54,9 @@ public class AdminVotingService {
     public FetchElectionDataResponse getAllElection() {
         List<ElectionDetails> electionDetailsList = electionDetailsRepository.findAll();
         if(electionDetailsList.isEmpty()){
-            throw new AdminElectionException("No Election Data is Present");
+            throw new ElectionException(ErrorCodes.NO_DATA_FOUND, "No Election Data is Present");
         }
-        return new FetchElectionDataResponse(Status.SUCCESS,electionDetailsList.size(),electionDetailsList,LocalDateTime.now());
+        return new FetchElectionDataResponse(Status.SUCCESS,electionDetailsList.size(),electionDetailsList,LocalDateTime.now(), ServiceCodes.GET_ELECTION_LIST.toString());
     }
 
 
